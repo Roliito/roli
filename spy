@@ -1,0 +1,45 @@
+# ! / usr / bin / python
+
+# analizar el archivo de caché del servicio de ubicación de Android
+# (c) 2011 magnus eriksson aka packetlss
+# 
+# cache.cell + cache.wifi archivos ubicados en /data/data/com.google.android.location/files en el dispositivo Android
+# 
+# formato de archivo
+#
+# encabezado
+# unsigned short db version, debe ser 1
+# número corto sin firmar de registros
+#
+# x bytes cadena UTF (clave)
+# int accuracy
+# int confianza
+# doble de latitud
+# longitud doble
+# largo tiempo de lectura
+
+# formato de clave
+# cell: mcc + ":" + mnc + ":" + lac + ":" + cid
+# wifi: dirección MAC de AP
+
+import sys, struct, time
+
+fh =  abrir (sys.argv [ 1 ], ' rb ' )
+
+db_version, db_total = struct.unpack ( ' > hh ' , fh.read ( 4 ))
+
+imprimir  " versión db:   % d "  % db_version
+imprimir  " total:        % d "  % db_total
+impresión 
+print  ' {0 : 22s }   {1 : 6s }   {2 : 6s }   {3 : 10s }   {4 : 9s }   {5 : s } ' .format ( ' clave ' , ' exactitud ' , ' conf. ' , ' latitud ' , ' longitud ' , ' tiempo ' )
+
+i =  0
+mientras que yo < db_total:
+    key = fh.read (struct.unpack ( ' > h ' , fh.read ( 2 )) [ 0 ])
+    (precisión, confianza, latitud, longitud, tiempo de lectura) = struct.unpack ( ' > iiddQ ' , fh.read ( 32 ))
+    
+    # tecla de impresión, precisión, confianza, latitud, longitud, tiempo.strftime ("% x% X% z", time.localtime (readtime / 1000))
+    print  ' {0 : 25s }   {1 : 5d }   {2 : 5d }   {3 : 10f }   {4 : 10f }   {5 : s } ' .format (clave, precisión, confianza, latitud, longitud, tiempo.striempo ( " % x  % X % z " , time.localtime (readtime / 1000 )))
+    i = i + 1
+
+fh.close ()
